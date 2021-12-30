@@ -1,3 +1,4 @@
+using Fithub.API.Helpers;
 using Fithub.API.Interfaces;
 using Fithub.API.Services;
 using Microsoft.AspNetCore.Builder;
@@ -21,14 +22,15 @@ namespace Fithub.API
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-
+            services.AddCors();
             services.AddControllers();
             services.AddSwaggerGen(c =>
             {
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = "Fithub.API", Version = "v1" });
             });
 
-            services.AddSingleton<IAuthService, JwtAuthService>();
+            services.AddScoped<IAuthService, JwtAuthService>();
+            services.AddScoped<IHashService, HashService>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -45,7 +47,7 @@ namespace Fithub.API
 
             app.UseRouting();
 
-            app.UseAuthorization();
+            app.UseMiddleware<AuthMiddleware>();
 
             app.UseEndpoints(endpoints =>
             {

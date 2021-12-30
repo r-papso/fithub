@@ -9,8 +9,6 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Fithub.API", "Fithub.API\Fi
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Fithub.UI", "Fithub.UI\Fithub.UI.csproj", "{1125C728-9619-4409-ABB3-CAC7A906F557}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Fithub.Auth", "Fithub.Auth\Fithub.Auth.csproj", "{A77277C1-CDF6-4FA6-AEB7-19A6139AF72D}"
-EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -29,10 +27,6 @@ Global
 		{1125C728-9619-4409-ABB3-CAC7A906F557}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{1125C728-9619-4409-ABB3-CAC7A906F557}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{1125C728-9619-4409-ABB3-CAC7A906F557}.Release|Any CPU.Build.0 = Release|Any CPU
-		{A77277C1-CDF6-4FA6-AEB7-19A6139AF72D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{A77277C1-CDF6-4FA6-AEB7-19A6139AF72D}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{A77277C1-CDF6-4FA6-AEB7-19A6139AF72D}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{A77277C1-CDF6-4FA6-AEB7-19A6139AF72D}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

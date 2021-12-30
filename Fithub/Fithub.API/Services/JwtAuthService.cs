@@ -51,7 +51,7 @@ namespace Fithub.API.Services
             {
                 var token = authData.Authorization as string;
                 var tokenHandler = new JwtSecurityTokenHandler();
-                var key = Encoding.ASCII.GetBytes("SECRET"); // TODO change SECRET
+                var key = Encoding.ASCII.GetBytes("SECRET KEY THAT SHOULD BE AT LEAST 128 BITS LONG, CONSIDER USING ENOUGH CHARACTERS"); // TODO change SECRET
 
                 var validationParams = new TokenValidationParameters()
                 {
@@ -82,7 +82,7 @@ namespace Fithub.API.Services
         private string GenerateJwtToken(Database.Models.User user)
         {
             var tokenHandler = new JwtSecurityTokenHandler();
-            var key = Encoding.ASCII.GetBytes("SECRET"); // TODO change SECRET
+            var key = Encoding.ASCII.GetBytes("SECRET KEY THAT SHOULD BE AT LEAST 128 BITS LONG, CONSIDER USING ENOUGH CHARACTERS"); // TODO change SECRET
 
             var tokenDescriptor = new SecurityTokenDescriptor()
             {

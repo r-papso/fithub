@@ -5,9 +5,13 @@ namespace Fithub.API.Interfaces
 {
     public interface IUserService
     {
-        public User GetUser(Credentials credentials);
+        public User GetUserById(int id);
 
-        public Task<User> GetUserAsync(Credentials credentials);
+        public Task<User> GetUserByIdAsync(int id);
+
+        public User GetUserByName(string name);
+
+        public Task<User> GetUserByNameAsync(string name);
 
         public bool AddUser(User user);
 

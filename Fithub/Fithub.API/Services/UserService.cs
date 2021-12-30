@@ -2,7 +2,6 @@
 using Fithub.API.Models;
 using Fithub.Database;
 using Microsoft.EntityFrameworkCore;
-using System;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -10,8 +9,6 @@ namespace Fithub.API.Services
 {
     public class UserService : IUserService
     {
-        private const int SaltLength = 32;
-
         private readonly FithubDbContext _dbContext;
         private readonly IHashService _hashService;
         private readonly IModelMapper _mapper;
@@ -23,24 +20,9 @@ namespace Fithub.API.Services
             _mapper = mapper;
         }
 
-        public User GetUser(Credentials credentials)
-        {
-            throw new NotImplementedException($"Not implemented, use {nameof(GetUserAsync)} instead");
-        }
-
-        public async Task<User> GetUserAsync(Credentials credentials)
-        {
-            var user = await _dbContext.Users.FirstOrDefaultAsync(x => x.Username.Equals(credentials.Username));
-
-            if (user == null)
-                return null;
-
-            return _mapper.MapBack(user);
-        }
-
         public bool AddUser(User user)
         {
-            throw new NotImplementedException($"Not implemented, use {nameof(AddUserAsync)} instead");
+            return AddUserAsync(user).Result;
         }
 
         public async Task<bool> AddUserAsync(User user)
@@ -48,11 +30,11 @@ namespace Fithub.API.Services
             if (_dbContext.Users.Any(x => x.Username.Equals(user.Username)))
                 return false;
 
-            var newUser = new Database.Models.User();
-            newUser.Salt = _hashService.GenerateSalt();
-            newUser.Password = _hashService.CryptPassword(user.Password, newUser.Salt);
+            var dbUser = new Database.Models.User() { Username = user.Username };
+            dbUser.Salt = _hashService.GenerateSalt();
+            dbUser.Password = _hashService.CryptPassword(user.Password, dbUser.Salt);
 
-            await _dbContext.Users.AddAsync(newUser);
+            await _dbContext.Users.AddAsync(dbUser);
             await _dbContext.SaveChangesAsync();
 
             return true;
@@ -60,7 +42,7 @@ namespace Fithub.API.Services
 
         public bool UpdateUser(User user)
         {
-            throw new NotImplementedException($"Not implemented, use {nameof(UpdateUserAsync)} instead");
+            return UpdateUserAsync(user).Result;
         }
 
         public async Task<bool> UpdateUserAsync(User user)
@@ -78,7 +60,7 @@ namespace Fithub.API.Services
 
         public bool DeleteUser(User user)
         {
-            throw new NotImplementedException($"Not implemented, use {nameof(DeleteUserAsync)} instead");
+            return DeleteUserAsync(user).Result;
         }
 
         public async Task<bool> DeleteUserAsync(User user)
@@ -92,6 +74,36 @@ namespace Fithub.API.Services
             await _dbContext.SaveChangesAsync();
 
             return true;
+        }
+
+        public User GetUserById(int id)
+        {
+            return GetUserByIdAsync(id).Result;
+        }
+
+        public async Task<User> GetUserByIdAsync(int id)
+        {
+            var dbUser = await _dbContext.Users.FirstOrDefaultAsync(x => x.Id == id);
+
+            if (dbUser == null)
+                return null;
+
+            return _mapper.MapBack(dbUser);
+        }
+
+        public User GetUserByName(string name)
+        {
+            return GetUserByNameAsync(name).Result;
+        }
+
+        public async Task<User> GetUserByNameAsync(string name)
+        {
+            var dbUser = await _dbContext.Users.FirstOrDefaultAsync(x => x.Username.Equals(name));
+
+            if (dbUser == null)
+                return null;
+
+            return _mapper.MapBack(dbUser);
         }
     }
 }
