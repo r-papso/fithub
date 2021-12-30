@@ -1,0 +1,43 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.31702.278
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Fithub.Database", "Fithub.Database\Fithub.Database.csproj", "{2E48E08D-094C-4FE6-8884-D2C6BB143A7D}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Fithub.API", "Fithub.API\Fithub.API.csproj", "{F20F4F30-4AAB-41CC-97C9-66E0C9C21860}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Fithub.UI", "Fithub.UI\Fithub.UI.csproj", "{1125C728-9619-4409-ABB3-CAC7A906F557}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Fithub.Auth", "Fithub.Auth\Fithub.Auth.csproj", "{A77277C1-CDF6-4FA6-AEB7-19A6139AF72D}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{2E48E08D-094C-4FE6-8884-D2C6BB143A7D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{2E48E08D-094C-4FE6-8884-D2C6BB143A7D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{2E48E08D-094C-4FE6-8884-D2C6BB143A7D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{2E48E08D-094C-4FE6-8884-D2C6BB143A7D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F20F4F30-4AAB-41CC-97C9-66E0C9C21860}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F20F4F30-4AAB-41CC-97C9-66E0C9C21860}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F20F4F30-4AAB-41CC-97C9-66E0C9C21860}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F20F4F30-4AAB-41CC-97C9-66E0C9C21860}.Release|Any CPU.Build.0 = Release|Any CPU
+		{1125C728-9619-4409-ABB3-CAC7A906F557}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{1125C728-9619-4409-ABB3-CAC7A906F557}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{1125C728-9619-4409-ABB3-CAC7A906F557}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{1125C728-9619-4409-ABB3-CAC7A906F557}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A77277C1-CDF6-4FA6-AEB7-19A6139AF72D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A77277C1-CDF6-4FA6-AEB7-19A6139AF72D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A77277C1-CDF6-4FA6-AEB7-19A6139AF72D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A77277C1-CDF6-4FA6-AEB7-19A6139AF72D}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {FCFE6395-8A21-44FF-A8DE-8B772F5A9AB3}
+	EndGlobalSection
+EndGlobal
