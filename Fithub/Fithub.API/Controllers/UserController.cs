@@ -10,7 +10,7 @@ namespace Fithub.API.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class UserController : ControllerBase
+    public class UserController : BaseController
     {
         private readonly IUserService _userService;
 
@@ -37,44 +37,27 @@ namespace Fithub.API.Controllers
         public async Task<ActionResult> Post([FromBody] User user)
         {
             var result = await _userService.AddUserAsync(user);
-
-            if (result)
-                return Ok();
-            else
-                return BadRequest();
+            return GetActionResult(result);
         }
 
-        // PUT api/<UserController>/5
+        // PUT api/<UserController>
         [HttpPut]
         [Authorize]
         public async Task<ActionResult> Put([FromBody] User user)
         {
             user.Id = GetUserId();
             var result = await _userService.UpdateUserAsync(user);
-
-            if (result)
-                return Ok();
-            else
-                return BadRequest();
+            return GetActionResult(result);
         }
 
-        // DELETE api/<UserController>/5
+        // DELETE api/<UserController>
         [HttpDelete]
         [Authorize]
         public async Task<ActionResult> Delete()
         {
             var user = new User() { Id = GetUserId() };
             var result = await _userService.DeleteUserAsync(user);
-
-            if (result)
-                return Ok();
-            else
-                return BadRequest();
-        }
-
-        private int GetUserId()
-        {
-            return int.Parse(HttpContext.Items["User"].ToString());
+            return GetActionResult(result);
         }
     }
 }

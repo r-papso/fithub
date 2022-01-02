@@ -1,7 +1,9 @@
-﻿using Fithub.API.Interfaces;
+﻿using Fithub.API.Helpers;
+using Fithub.API.Interfaces;
 using Fithub.API.Models;
 using Fithub.Database;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 using System;
 using System.IdentityModel.Tokens.Jwt;
@@ -18,11 +20,13 @@ namespace Fithub.API.Services
 
         private readonly FithubDbContext _dbContext;
         private readonly IHashService _hashService;
+        private readonly AppSettings _appSettings;
 
-        public JwtAuthService(IHashService hashService, FithubDbContext dbContext)
+        public JwtAuthService(IHashService hashService, FithubDbContext dbContext, IOptions<AppSettings> options)
         {
             _hashService = hashService;
             _dbContext = dbContext;
+            _appSettings = options.Value;
         }
 
         public AuthData Authenticate(AuthData authData)
@@ -51,7 +55,7 @@ namespace Fithub.API.Services
             {
                 var token = authData.Authorization as string;
                 var tokenHandler = new JwtSecurityTokenHandler();
-                var key = Encoding.ASCII.GetBytes("SECRET KEY THAT SHOULD BE AT LEAST 128 BITS LONG, CONSIDER USING ENOUGH CHARACTERS"); // TODO change SECRET
+                var key = Encoding.ASCII.GetBytes(_appSettings.Secret);
 
                 var validationParams = new TokenValidationParameters()
                 {
@@ -82,7 +86,7 @@ namespace Fithub.API.Services
         private string GenerateJwtToken(Database.Models.User user)
         {
             var tokenHandler = new JwtSecurityTokenHandler();
-            var key = Encoding.ASCII.GetBytes("SECRET KEY THAT SHOULD BE AT LEAST 128 BITS LONG, CONSIDER USING ENOUGH CHARACTERS"); // TODO change SECRET
+            var key = Encoding.ASCII.GetBytes(_appSettings.Secret);
 
             var tokenDescriptor = new SecurityTokenDescriptor()
             {

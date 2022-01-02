@@ -3,6 +3,7 @@
     public enum CategoryType
     {
         Power,
-        Cardio
+        Cardio,
+        Other
     }
 }

@@ -10,6 +10,10 @@ namespace Fithub.Database.Models
 
         public CategoryType Type { get; set; }
 
+        public int UserId { get; set; }
+
+        public User User { get; set; }
+
         public List<Exercise> Exercises { get; set; }
     }
 }

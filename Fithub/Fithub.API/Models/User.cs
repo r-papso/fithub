@@ -1,4 +1,6 @@
-﻿namespace Fithub.API.Models
+﻿using System.Text.Json.Serialization;
+
+namespace Fithub.API.Models
 {
     public class User
     {
@@ -6,6 +8,7 @@
 
         public string Username { get; set; }
 
+        [JsonIgnore]
         public string Password { get; set; }
     }
 }

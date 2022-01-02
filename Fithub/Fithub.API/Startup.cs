@@ -1,8 +1,10 @@
 using Fithub.API.Helpers;
 using Fithub.API.Interfaces;
 using Fithub.API.Services;
+using Fithub.Database;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
@@ -27,6 +29,14 @@ namespace Fithub.API
             services.AddSwaggerGen(c =>
             {
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = "Fithub.API", Version = "v1" });
+            });
+
+            services.Configure<AppSettings>(Configuration.GetSection("AppSettings"));
+            var appSettings = Configuration.GetSection("AppSettings").Get<AppSettings>();
+
+            services.AddDbContext<FithubDbContext>(options =>
+            {
+                options.UseSqlServer(appSettings.ConnectionString);
             });
 
             services.AddScoped<IAuthService, JwtAuthService>();

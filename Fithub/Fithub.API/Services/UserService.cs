@@ -2,7 +2,6 @@
 using Fithub.API.Models;
 using Fithub.Database;
 using Microsoft.EntityFrameworkCore;
-using System.Linq;
 using System.Threading.Tasks;
 
 namespace Fithub.API.Services
@@ -27,10 +26,13 @@ namespace Fithub.API.Services
 
         public async Task<bool> AddUserAsync(User user)
         {
-            if (_dbContext.Users.Any(x => x.Username.Equals(user.Username)))
+            var existing = await _dbContext.Users
+                .FirstOrDefaultAsync(x => x.Username.Equals(user.Username));
+
+            if (existing != null)
                 return false;
 
-            var dbUser = new Database.Models.User() { Username = user.Username };
+            var dbUser = _mapper.Map(user);
             dbUser.Salt = _hashService.GenerateSalt();
             dbUser.Password = _hashService.CryptPassword(user.Password, dbUser.Salt);
 
@@ -47,12 +49,14 @@ namespace Fithub.API.Services
 
         public async Task<bool> UpdateUserAsync(User user)
         {
-            var dbUser = await _dbContext.Users.FirstOrDefaultAsync(x => x.Username.Equals(user.Username));
+            var dbUser = await _dbContext.Users
+                .FirstOrDefaultAsync(x => x.Username.Equals(user.Username));
 
             if (dbUser == null)
                 return false;
 
-            var updatedUser = _mapper.Map(user, dbUser);
+            var updated = _mapper.Map(user, dbUser);
+            _dbContext.Users.Update(updated);
             await _dbContext.SaveChangesAsync();
 
             return true;
@@ -65,7 +69,8 @@ namespace Fithub.API.Services
 
         public async Task<bool> DeleteUserAsync(User user)
         {
-            var dbUser = await _dbContext.Users.FirstOrDefaultAsync(x => x.Username.Equals(user.Username));
+            var dbUser = await _dbContext.Users
+                .FirstOrDefaultAsync(x => x.Username.Equals(user.Username));
 
             if (dbUser == null)
                 return false;
@@ -83,7 +88,8 @@ namespace Fithub.API.Services
 
         public async Task<User> GetUserByIdAsync(int id)
         {
-            var dbUser = await _dbContext.Users.FirstOrDefaultAsync(x => x.Id == id);
+            var dbUser = await _dbContext.Users
+                .FirstOrDefaultAsync(x => x.Id == id);
 
             if (dbUser == null)
                 return null;
@@ -98,7 +104,8 @@ namespace Fithub.API.Services
 
         public async Task<User> GetUserByNameAsync(string name)
         {
-            var dbUser = await _dbContext.Users.FirstOrDefaultAsync(x => x.Username.Equals(name));
+            var dbUser = await _dbContext.Users
+                .FirstOrDefaultAsync(x => x.Username.Equals(name));
 
             if (dbUser == null)
                 return null;
