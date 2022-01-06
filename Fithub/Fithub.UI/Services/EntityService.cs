@@ -9,7 +9,8 @@ namespace Fithub.UI.Services
     public abstract class EntityService<T> : IEntityService<T>
     {
         protected IHttpService HttpService { get; }
-        protected ICollection<T> Entities { get; }
+
+        protected ICollection<T> Entities { get; set; }
 
         public EntityService(IHttpService httpService)
         {
@@ -49,6 +50,11 @@ namespace Fithub.UI.Services
             Entities.Remove(old);
             Entities.Add(updated);
             OnEntitiesChanged();
+        }
+
+        public void Sort<TKey>(Func<T, TKey> selector)
+        {
+            Entities = Entities.OrderBy(selector).ToList();
         }
 
         protected abstract bool Compare(T left, T right);

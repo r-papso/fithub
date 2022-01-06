@@ -19,12 +19,7 @@ namespace Fithub.API.Services
             _mapper = mapper;
         }
 
-        public Category AddCategory(Category category)
-        {
-            return AddCategoryAsync(category).Result;
-        }
-
-        public async Task<Category> AddCategoryAsync(Category category)
+        public async Task<Category> AddCategory(Category category)
         {
             var dbCategory = _mapper.Map(category);
             var added = await _dbContext.Categories.AddAsync(dbCategory);
@@ -33,12 +28,7 @@ namespace Fithub.API.Services
             return _mapper.MapBack(added.Entity);
         }
 
-        public Category DeleteCategory(Category category)
-        {
-            return DeleteCategoryAsync(category).Result;
-        }
-
-        public async Task<Category> DeleteCategoryAsync(Category category)
+        public async Task<Category> DeleteCategory(Category category)
         {
             var dbCategory = await _dbContext.Categories
                 .FirstOrDefaultAsync(x => x.UserId == category.UserId && category.Id == x.Id);
@@ -52,12 +42,7 @@ namespace Fithub.API.Services
             return _mapper.MapBack(dbCategory);
         }
 
-        public ICollection<Category> GetCategories(int userId)
-        {
-            return GetCategoriesAsync(userId).Result;
-        }
-
-        public async Task<ICollection<Category>> GetCategoriesAsync(int userId)
+        public async Task<IEnumerable<Category>> GetCategories(int userId)
         {
             return await _dbContext.Categories
                 .Where(x => x.UserId == userId)
@@ -65,12 +50,7 @@ namespace Fithub.API.Services
                 .ToListAsync();
         }
 
-        public Category UpdateCategory(Category category)
-        {
-            return UpdateCategoryAsync(category).Result;
-        }
-
-        public async Task<Category> UpdateCategoryAsync(Category category)
+        public async Task<Category> UpdateCategory(Category category)
         {
             var dbCategory = await _dbContext.Categories
                 .FirstOrDefaultAsync(x => x.UserId == category.UserId && category.Id == x.Id);

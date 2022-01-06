@@ -22,7 +22,7 @@ namespace Fithub.API.Controllers
         public async Task<ActionResult<User>> Authenticate([FromBody] Credentials credentials)
         {
             var authInput = new AuthData() { Authentication = credentials };
-            var authOutput = await _authService.AuthenticateAsync(authInput);
+            var authOutput = await _authService.Authenticate(authInput);
 
             if (authOutput.Authentication == null)
                 return Unauthorized();
@@ -35,13 +35,13 @@ namespace Fithub.API.Controllers
         public async Task<ActionResult<User>> Register([FromBody] Credentials credentials)
         {
             var user = new User() { Username = credentials.Username, Password = credentials.Password };
-            var result = await _userService.AddUserAsync(user);
+            var result = await _userService.AddUser(user);
 
-            if (!result)
+            if (result == null)
                 return BadRequest();
 
             var authInput = new AuthData() { Authentication = credentials };
-            var authOutput = await _authService.AuthenticateAsync(authInput);
+            var authOutput = await _authService.Authenticate(authInput);
 
             if (authOutput.Authentication == null)
                 return Unauthorized();

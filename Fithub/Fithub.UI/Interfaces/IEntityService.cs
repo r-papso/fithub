@@ -18,6 +18,8 @@ namespace Fithub.UI.Interfaces
 
         public Task Delete(T entity);
 
+        public void Sort<TKey>(Func<T, TKey> selector);
+
         public event EventHandler EntitiesChanged;
     }
 }

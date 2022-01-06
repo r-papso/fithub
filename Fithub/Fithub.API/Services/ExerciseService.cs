@@ -19,32 +19,16 @@ namespace Fithub.API.Services
             _mapper = mapper;
         }
 
-        public Exercise AddExercise(Exercise exercise)
+        public async Task<Exercise> AddExercise(Exercise exercise)
         {
-            return AddExerciseAsync(exercise).Result;
-        }
-
-        public async Task<Exercise> AddExerciseAsync(Exercise exercise)
-        {
-            var category = await _dbContext.Categories
-                .FirstOrDefaultAsync(x => x.Id == exercise.CategoryId);
-
-            if (category == null)
-                return null;
-
             var dbExercise = _mapper.Map(exercise);
-            category.Exercises.Add(dbExercise);
+            var added = _dbContext.Exercises.Add(dbExercise);
             await _dbContext.SaveChangesAsync();
 
-            return _mapper.MapBack(dbExercise);
+            return _mapper.MapBack(added.Entity);
         }
 
-        public Exercise DeleteExercise(Exercise exercise)
-        {
-            return DeleteExerciseAsync(exercise).Result;
-        }
-
-        public async Task<Exercise> DeleteExerciseAsync(Exercise exercise)
+        public async Task<Exercise> DeleteExercise(Exercise exercise)
         {
             var dbExercise = await _dbContext.Exercises
                 .FirstOrDefaultAsync(x => x.CategoryId == exercise.CategoryId && x.Id == exercise.Id);
@@ -58,12 +42,7 @@ namespace Fithub.API.Services
             return _mapper.MapBack(dbExercise);
         }
 
-        public ICollection<Exercise> GetExercises(int userId, int categoryId)
-        {
-            return GetExercisesAsync(userId, categoryId).Result;
-        }
-
-        public async Task<ICollection<Exercise>> GetExercisesAsync(int userId, int categoryId)
+        public async Task<IEnumerable<Exercise>> GetExercises(int userId, int categoryId)
         {
             return await _dbContext.Exercises
                 .Where(x => x.CategoryId == categoryId && x.UserId == userId)
@@ -71,12 +50,7 @@ namespace Fithub.API.Services
                 .ToListAsync();
         }
 
-        public Exercise UpdateExercise(Exercise exercise)
-        {
-            return UpdateExerciseAsync(exercise).Result;
-        }
-
-        public async Task<Exercise> UpdateExerciseAsync(Exercise exercise)
+        public async Task<Exercise> UpdateExercise(Exercise exercise)
         {
             var dbExercise = await _dbContext.Exercises
                 .FirstOrDefaultAsync(x => x.CategoryId == exercise.CategoryId && x.Id == exercise.Id);

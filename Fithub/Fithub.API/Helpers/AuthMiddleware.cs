@@ -22,7 +22,7 @@ namespace Fithub.API.Helpers
             if (token != null)
             {
                 var authInput = new AuthData() { Authorization = token };
-                var authOutput = await service.AuthorizeAsync(authInput);
+                var authOutput = await service.Authorize(authInput);
 
                 if (authOutput != null)
                     context.Items["User"] = authOutput.Authorization;

@@ -5,9 +5,8 @@
 
 <h3>Categories</h3>
 
-
-<Table>
-    <TableHeader>
+<Table Hoverable="true">
+    <TableHeader ThemeContrast="ThemeContrast.Light">
         <TableRow>
             <TableHeaderCell>Category Name</TableHeaderCell>
             <TableHeaderCell>Category Type</TableHeaderCell>
@@ -17,7 +16,7 @@
     <TableBody>
         @foreach (var category in Service.Get())
         {
-            <TableRow>
+            <TableRow HoverCursor="Cursor.Pointer" Clicked="@(() => NavigateToExercises(category))">
                 <TableRowCell>@category.Name</TableRowCell>
                 <TableRowCell>@category.Type</TableRowCell>
                 <TableRowCell>

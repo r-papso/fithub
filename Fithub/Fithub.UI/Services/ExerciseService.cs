@@ -2,6 +2,7 @@
 using Fithub.UI.Interfaces;
 using Fithub.UI.Models;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace Fithub.UI.Services
@@ -25,6 +26,14 @@ namespace Fithub.UI.Services
             }
 
             OnEntitiesChanged();
+        }
+
+        public IEnumerable<ExerciseDateGroup> GetExercisesGroupedByDate()
+        {
+            return Entities
+                .GroupBy(x => x.Start.Value.Date)
+                .Select(g => new ExerciseDateGroup() { Date = g.Key, Exercises = g })
+                .OrderByDescending(x => x.Date);
         }
 
         protected override bool Compare(Exercise left, Exercise right)

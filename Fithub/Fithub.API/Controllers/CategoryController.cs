@@ -25,7 +25,7 @@ namespace Fithub.API.Controllers
         [Authorize]
         public async Task<ActionResult<IEnumerable<Category>>> Get()
         {
-            var result = await _categoryService.GetCategoriesAsync(GetUserId());
+            var result = await _categoryService.GetCategories(GetUserId());
             return Ok(result);
         }
 
@@ -37,7 +37,7 @@ namespace Fithub.API.Controllers
             if (category.UserId != GetUserId())
                 return Unauthorized();
 
-            var result = await _categoryService.AddCategoryAsync(category);
+            var result = await _categoryService.AddCategory(category);
             return GetActionResult(result);
         }
 
@@ -49,7 +49,7 @@ namespace Fithub.API.Controllers
             if (category.UserId != GetUserId())
                 return Unauthorized();
 
-            var result = await _categoryService.UpdateCategoryAsync(category);
+            var result = await _categoryService.UpdateCategory(category);
             return GetActionResult(result);
         }
 
@@ -61,7 +61,7 @@ namespace Fithub.API.Controllers
             if (category.UserId != GetUserId())
                 return Unauthorized();
 
-            var result = await _categoryService.DeleteCategoryAsync(category);
+            var result = await _categoryService.DeleteCategory(category);
             return GetActionResult(result);
         }
     }

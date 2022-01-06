@@ -1,0 +1,133 @@
+﻿@page "/exercises/{CategoryId:int}"
+@attribute [Authorize]
+
+<h3>Exercises</h3>
+
+<Accordion>
+    @foreach (var exerciseGroup in Service.GetExercisesGroupedByDate())
+    {
+        <Collapse Visible="exerciseGroup.Visible">
+            <CollapseHeader>
+                <Heading Size="HeadingSize.Is5">
+                    <Button Clicked="@(() => exerciseGroup.Visible = !exerciseGroup.Visible)">@exerciseGroup.Date</Button>
+                </Heading>
+            </CollapseHeader>
+            <CollapseBody>
+                <Table>
+                    <TableHeader ThemeContrast="ThemeContrast.Light">
+                        <TableRow>
+                            <TableHeaderCell>Weight</TableHeaderCell>
+                            <TableHeaderCell>Reps</TableHeaderCell>
+                            <TableHeaderCell>Time</TableHeaderCell>
+                            <TableHeaderCell>Note</TableHeaderCell>
+                            <TableHeaderCell>Actions</TableHeaderCell>
+                        </TableRow>
+                    </TableHeader>
+                    <TableBody>
+                        @foreach (var exercise in exerciseGroup.Exercises)
+                        {
+                            <TableRow>
+                                <TableRowCell>@exercise.Weight</TableRowCell>
+                                <TableRowCell>@exercise.Reps</TableRowCell>
+                                <TableRowCell>@exercise.Start</TableRowCell>
+                                <TableRowCell>@exercise.Note</TableRowCell>
+                                <TableRowCell>
+                                    <div>
+                                        <Button Color="Color.Primary" Outline Clicked="@(() => { selectedExercise = new Models.Exercise(exercise); updateModal.Show(); })">Edit</Button>
+                                        <Button Color="Color.Danger" Outline Clicked="@(() => DeleteExercise(exercise))">Delete</Button>
+                                    </div>
+                                </TableRowCell>
+                            </TableRow>
+                        }
+                    </TableBody>
+                </Table>
+            </CollapseBody>
+        </Collapse>
+    }
+</Accordion>
+
+<Button Color="Color.Primary" Clicked="@(() => addModal.Show())">New Exercise</Button>
+
+<Modal @ref="addModal">
+    <ModalContent>
+        <ModalHeader>
+            <ModalTitle>New exercise</ModalTitle>
+            <CloseButton />
+        </ModalHeader>
+        <ModalBody>
+            <Field>
+                <FieldLabel>Reps</FieldLabel>
+                <NumericEdit @bind-Value="@newExercise.Reps" />
+            </Field>
+            <Field>
+                <FieldLabel>Weight</FieldLabel>
+                <NumericEdit @bind-Value="@newExercise.Weight" />
+            </Field>
+            <Field>
+                <FieldLabel>Start</FieldLabel>
+                <DateEdit TValue="DateTime?" InputMode="DateInputMode.DateTime" @bind-Date="@newExercise.Start" />
+            </Field>
+            <Field>
+                <FieldLabel>End</FieldLabel>
+                <DateEdit TValue="DateTime?" InputMode="DateInputMode.DateTime" @bind-Date="@newExercise.End" />
+            </Field>
+            <Field>
+                <FieldLabel>Note</FieldLabel>
+                <TextEdit @bind-Text="@newExercise.Note" />
+            </Field>
+        </ModalBody>
+        <ModalFooter>
+            <Button Color="Color.Secondary" Clicked="@(() => addModal.Hide())">Close</Button>
+            <Button Color="Color.Primary" Clicked="@AddExercise">Create</Button>
+        </ModalFooter>
+    </ModalContent>
+</Modal>
+
+<Modal @ref="updateModal">
+    <ModalContent>
+        <ModalHeader>
+            <ModalTitle>Update category</ModalTitle>
+            <CloseButton />
+        </ModalHeader>
+        <ModalBody>
+            <Field>
+                <FieldLabel>Reps</FieldLabel>
+                <NumericEdit @bind-Value="@selectedExercise.Reps" />
+            </Field>
+            <Field>
+                <FieldLabel>Weight</FieldLabel>
+                <NumericEdit @bind-Value="@selectedExercise.Weight" />
+            </Field>
+            <Field>
+                <FieldLabel>Start</FieldLabel>
+                <DateEdit TValue="DateTime?" InputMode="DateInputMode.DateTime" @bind-Date="@selectedExercise.Start" />
+            </Field>
+            <Field>
+                <FieldLabel>End</FieldLabel>
+                <DateEdit TValue="DateTime?" InputMode="DateInputMode.DateTime" @bind-Date="@selectedExercise.End" />
+            </Field>
+            <Field>
+                <FieldLabel>Note</FieldLabel>
+                <TextEdit @bind-Text="@selectedExercise.Note" />
+            </Field>
+        </ModalBody>
+        <ModalFooter>
+            <Button Color="Color.Secondary" Clicked="@(() => updateModal.Hide())">Close</Button>
+            <Button Color="Color.Primary" Clicked="@UpdateExercise">Update</Button>
+        </ModalFooter>
+    </ModalContent>
+</Modal>
+
+<Snackbar @ref="successSnackbar" Color="SnackbarColor.Success">
+    <SnackbarBody>
+        @successMessage
+        <SnackbarAction Clicked="@(()=>successSnackbar.Hide())">HIDE</SnackbarAction>
+    </SnackbarBody>
+</Snackbar>
+
+<Snackbar @ref="errorSnackbar" Color="SnackbarColor.Danger">
+    <SnackbarBody>
+        @errorMessage
+        <SnackbarAction Clicked="@(()=>errorSnackbar.Hide())">HIDE</SnackbarAction>
+    </SnackbarBody>
+</Snackbar>

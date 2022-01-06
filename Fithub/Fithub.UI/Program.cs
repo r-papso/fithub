@@ -30,6 +30,8 @@ namespace Fithub.UI
             builder.Services.AddScoped<CategoryService>();
             builder.Services.AddScoped<ExerciseService>();
 
+            builder.Services.AddSingleton<IStateContainer, StateContainer>();
+
             var host = builder.Build();
 
             var authService = host.Services.GetRequiredService<IAuthService>();

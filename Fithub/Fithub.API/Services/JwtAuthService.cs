@@ -31,12 +31,7 @@ namespace Fithub.API.Services
             _mapper = mapper;
         }
 
-        public AuthData Authenticate(AuthData authData)
-        {
-            return AuthenticateAsync(authData).Result;
-        }
-
-        public async Task<AuthData> AuthenticateAsync(AuthData authData)
+        public async Task<AuthData> Authenticate(AuthData authData)
         {
             var creds = authData.Authentication as Credentials;
             var user = await _dbContext.Users.FirstOrDefaultAsync(x => x.Username.Equals(creds.Username));
@@ -54,12 +49,7 @@ namespace Fithub.API.Services
             return new AuthData() { Authentication = apiUser };
         }
 
-        public AuthData Authorize(AuthData authData)
-        {
-            return AuthorizeAsync(authData).Result;
-        }
-
-        public async Task<AuthData> AuthorizeAsync(AuthData authData)
+        public async Task<AuthData> Authorize(AuthData authData)
         {
             try
             {

@@ -6,20 +6,12 @@ namespace Fithub.API.Interfaces
 {
     public interface IExerciseService
     {
-        public ICollection<Exercise> GetExercises(int userId, int categoryId);
+        public Task<IEnumerable<Exercise>> GetExercises(int userId, int categoryId);
 
-        public Task<ICollection<Exercise>> GetExercisesAsync(int userId, int categoryId);
+        public Task<Exercise> AddExercise(Exercise exercise);
 
-        public Exercise AddExercise(Exercise exercise);
+        public Task<Exercise> UpdateExercise(Exercise exercise);
 
-        public Task<Exercise> AddExerciseAsync(Exercise exercise);
-
-        public Exercise UpdateExercise(Exercise exercise);
-
-        public Task<Exercise> UpdateExerciseAsync(Exercise exercise);
-
-        public Exercise DeleteExercise(Exercise exercise);
-
-        public Task<Exercise> DeleteExerciseAsync(Exercise exercise);
+        public Task<Exercise> DeleteExercise(Exercise exercise);
     }
 }

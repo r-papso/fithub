@@ -24,7 +24,7 @@ namespace Fithub.API.Controllers
         [Authorize]
         public async Task<ActionResult<User>> Get()
         {
-            var user = await _userService.GetUserByIdAsync(GetUserId());
+            var user = await _userService.GetUserById(GetUserId());
 
             if (user != null)
                 return Ok(user);
@@ -38,7 +38,7 @@ namespace Fithub.API.Controllers
         public async Task<ActionResult> Put([FromBody] User user)
         {
             user.Id = GetUserId();
-            var result = await _userService.UpdateUserAsync(user);
+            var result = await _userService.UpdateUser(user);
             return GetActionResult(result);
         }
 
@@ -48,7 +48,7 @@ namespace Fithub.API.Controllers
         public async Task<ActionResult> Delete()
         {
             var user = new User() { Id = GetUserId() };
-            var result = await _userService.DeleteUserAsync(user);
+            var result = await _userService.DeleteUser(user);
             return GetActionResult(result);
         }
     }

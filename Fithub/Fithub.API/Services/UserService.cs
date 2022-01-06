@@ -19,41 +19,31 @@ namespace Fithub.API.Services
             _mapper = mapper;
         }
 
-        public bool AddUser(User user)
-        {
-            return AddUserAsync(user).Result;
-        }
-
-        public async Task<bool> AddUserAsync(User user)
+        public async Task<User> AddUser(User user)
         {
             var existing = await _dbContext.Users
                 .FirstOrDefaultAsync(x => x.Username.Equals(user.Username));
 
             if (existing != null)
-                return false;
+                return null;
 
             var dbUser = _mapper.Map(user);
             dbUser.Salt = _hashService.GenerateSalt();
             dbUser.Password = _hashService.CryptPassword(user.Password, dbUser.Salt);
 
-            await _dbContext.Users.AddAsync(dbUser);
+            var added = await _dbContext.Users.AddAsync(dbUser);
             await _dbContext.SaveChangesAsync();
 
-            return true;
+            return _mapper.MapBack(added.Entity);
         }
 
-        public bool UpdateUser(User user)
-        {
-            return UpdateUserAsync(user).Result;
-        }
-
-        public async Task<bool> UpdateUserAsync(User user)
+        public async Task<User> UpdateUser(User user)
         {
             var dbUser = await _dbContext.Users
                 .FirstOrDefaultAsync(x => x.Username.Equals(user.Username));
 
             if (dbUser == null)
-                return false;
+                return null;
 
             var updated = _mapper.Map(user, dbUser);
             dbUser.Password = _hashService.CryptPassword(user.Password, dbUser.Salt);
@@ -61,34 +51,24 @@ namespace Fithub.API.Services
             _dbContext.Users.Update(updated);
             await _dbContext.SaveChangesAsync();
 
-            return true;
+            return _mapper.MapBack(updated);
         }
 
-        public bool DeleteUser(User user)
-        {
-            return DeleteUserAsync(user).Result;
-        }
-
-        public async Task<bool> DeleteUserAsync(User user)
+        public async Task<User> DeleteUser(User user)
         {
             var dbUser = await _dbContext.Users
                 .FirstOrDefaultAsync(x => x.Username.Equals(user.Username));
 
             if (dbUser == null)
-                return false;
+                return null;
 
             _dbContext.Users.Remove(dbUser);
             await _dbContext.SaveChangesAsync();
 
-            return true;
+            return _mapper.MapBack(dbUser);
         }
 
-        public User GetUserById(int id)
-        {
-            return GetUserByIdAsync(id).Result;
-        }
-
-        public async Task<User> GetUserByIdAsync(int id)
+        public async Task<User> GetUserById(int id)
         {
             var dbUser = await _dbContext.Users
                 .FirstOrDefaultAsync(x => x.Id == id);
@@ -99,12 +79,7 @@ namespace Fithub.API.Services
             return _mapper.MapBack(dbUser);
         }
 
-        public User GetUserByName(string name)
-        {
-            return GetUserByNameAsync(name).Result;
-        }
-
-        public async Task<User> GetUserByNameAsync(string name)
+        public async Task<User> GetUserByName(string name)
         {
             var dbUser = await _dbContext.Users
                 .FirstOrDefaultAsync(x => x.Username.Equals(name));

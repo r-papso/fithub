@@ -25,7 +25,7 @@ namespace Fithub.API.Controllers
         [Authorize]
         public async Task<ActionResult<IEnumerable<Exercise>>> Get(int categoryId)
         {
-            var result = await _exerciseService.GetExercisesAsync(GetUserId(), categoryId);
+            var result = await _exerciseService.GetExercises(GetUserId(), categoryId);
             return Ok(result);
         }
 
@@ -37,7 +37,7 @@ namespace Fithub.API.Controllers
             if (exercise.UserId != GetUserId())
                 return Unauthorized();
 
-            var result = await _exerciseService.AddExerciseAsync(exercise);
+            var result = await _exerciseService.AddExercise(exercise);
             return GetActionResult(result);
         }
 
@@ -49,7 +49,7 @@ namespace Fithub.API.Controllers
             if (exercise.UserId != GetUserId())
                 return Unauthorized();
 
-            var result = await _exerciseService.UpdateExerciseAsync(exercise);
+            var result = await _exerciseService.UpdateExercise(exercise);
             return GetActionResult(result);
         }
 
@@ -61,7 +61,7 @@ namespace Fithub.API.Controllers
             if (exercise.UserId != GetUserId())
                 return Unauthorized();
 
-            var result = await _exerciseService.DeleteExerciseAsync(exercise);
+            var result = await _exerciseService.DeleteExercise(exercise);
             return GetActionResult(result);
         }
     }

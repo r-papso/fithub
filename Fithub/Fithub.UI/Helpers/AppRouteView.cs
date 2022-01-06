@@ -13,12 +13,12 @@ namespace Fithub.UI.Helpers
         public NavigationManager NavigationManager { get; set; }
 
         [Inject]
-        public ILocalStorage Storage { get; set; }
+        public IStateContainer Container { get; set; }
 
         protected override void Render(RenderTreeBuilder builder)
         {
             var authorize = Attribute.GetCustomAttribute(RouteData.PageType, typeof(AuthorizeAttribute)) != null;
-            var user = Storage.GetItem<User>("user");
+            var user = Container.GetItem<User>("user");
 
             if (authorize && user == null)
                 NavigationManager.NavigateTo("login");

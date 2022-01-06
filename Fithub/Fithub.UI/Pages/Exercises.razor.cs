@@ -8,8 +8,16 @@ using System;
 
 namespace Fithub.UI.Pages
 {
-    public partial class Categories : IDisposable
+    public partial class Exercises : IDisposable
     {
+        #region Models
+
+        private Exercise selectedExercise = new();
+        private Exercise newExercise = new();
+
+        #endregion
+
+
         #region Modal
 
         private Modal updateModal;
@@ -29,45 +37,44 @@ namespace Fithub.UI.Pages
         #endregion
 
 
-        #region Models
-
-        private Category selectedCategory = new();
-        private Category newCategory = new();
-
-        #endregion
-
-
-        #region Services
+        [Parameter]
+        public int CategoryId { get; set; }
 
         [Inject]
-        protected CategoryService Service { get; set; }
+        protected ExerciseService Service { get; set; }
 
         [Inject]
         protected IStateContainer Container { get; set; }
-
-        [Inject]
-        public NavigationManager NavigationManager { get; set; }
-
-        #endregion
 
         protected override void OnInitialized()
         {
             base.OnInitialized();
 
             Service.EntitiesChanged += OnEntitiesChanged;
-            _ = Service.Request(null);
+            _ = Service.Request(CategoryId);
         }
 
-        private async void AddCategory()
+        private void OnEntitiesChanged(object sender, EventArgs e)
+        {
+            _ = InvokeAsync(StateHasChanged);
+        }
+
+        private async void AddExercise()
         {
             addModal.Hide();
 
             try
             {
+                newExercise.Start ??= DateTime.Now;
+                newExercise.End ??= DateTime.Now;
+
                 var user = Container.GetItem<User>("user");
-                newCategory.UserId = user?.Id ?? -1;
-                await Service.Add(newCategory);
-                successMessage = "Category successfully added!";
+                newExercise.UserId = user.Id;
+                newExercise.CategoryId = CategoryId;
+
+                await Service.Add(newExercise);
+
+                successMessage = "Exercise successfully added!";
                 successSnackbar.Show();
             }
             catch (Exception ex)
@@ -75,18 +82,19 @@ namespace Fithub.UI.Pages
                 errorMessage = ex.Message;
                 errorSnackbar.Show();
             }
-
-            newCategory = new();
         }
 
-        private async void UpdateCategory()
+        private async void UpdateExercise()
         {
             updateModal.Hide();
 
             try
             {
-                await Service.Update(selectedCategory);
-                successMessage = "Category successfully updated!";
+                selectedExercise.Start ??= DateTime.Now;
+                selectedExercise.End ??= DateTime.Now;
+
+                await Service.Update(selectedExercise);
+                successMessage = "Exercise successfully updated!";
                 successSnackbar.Show();
             }
             catch (Exception ex)
@@ -96,12 +104,12 @@ namespace Fithub.UI.Pages
             }
         }
 
-        private async void DeleteCategory(Category category)
+        private async void DeleteExercise(Exercise exercise)
         {
             try
             {
-                await Service.Delete(category);
-                successMessage = "Category successfully deleted!";
+                await Service.Delete(exercise);
+                successMessage = "Exercise successfully deleted!";
                 successSnackbar.Show();
             }
             catch (Exception ex)
@@ -109,17 +117,6 @@ namespace Fithub.UI.Pages
                 errorMessage = ex.Message;
                 errorSnackbar.Show();
             }
-        }
-
-        private void NavigateToExercises(Category category)
-        {
-            NavigationManager.NavigateTo($"/exercises/{category.Id}");
-        }
-
-        private void OnEntitiesChanged(object sender, EventArgs e)
-        {
-            Service.Sort(x => x.Name);
-            _ = InvokeAsync(StateHasChanged);
         }
 
         public void Dispose()
