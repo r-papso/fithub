@@ -32,14 +32,6 @@ namespace Fithub.API.Controllers
                 return NotFound();
         }
 
-        // POST api/<UserController>
-        [HttpPost]
-        public async Task<ActionResult> Post([FromBody] User user)
-        {
-            var result = await _userService.AddUserAsync(user);
-            return GetActionResult(result);
-        }
-
         // PUT api/<UserController>
         [HttpPut]
         [Authorize]

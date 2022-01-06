@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Fithub.Database.Models
+namespace Fithub.UI.Models
 {
     public class Exercise
     {
@@ -19,7 +19,5 @@ namespace Fithub.Database.Models
         public int CategoryId { get; set; }
 
         public int UserId { get; set; }
-
-        public Category Category { get; set; }
     }
 }

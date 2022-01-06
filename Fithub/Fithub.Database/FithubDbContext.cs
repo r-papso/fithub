@@ -20,5 +20,12 @@ namespace Fithub.Database
 
             modelBuilder.ApplyConfigurationsFromAssembly(typeof(FithubDbContext).Assembly);
         }
+
+        /*protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+        {
+            base.OnConfiguring(optionsBuilder);
+
+            optionsBuilder.UseSqlServer("Server=(localdb)\\mssqllocaldb;Database=FithubDb;Trusted_Connection=True");
+        }*/
     }
 }

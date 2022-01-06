@@ -9,12 +9,9 @@ namespace Fithub.API.Controllers
             return int.Parse(HttpContext.Items["User"].ToString());
         }
 
-        protected ActionResult GetActionResult(bool operationResult)
+        protected ActionResult GetActionResult(object operationResult)
         {
-            if (operationResult)
-                return Ok();
-            else
-                return BadRequest();
+            return operationResult != null ? Ok(operationResult) : BadRequest();
         }
     }
 }

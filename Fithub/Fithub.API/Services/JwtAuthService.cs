@@ -21,12 +21,14 @@ namespace Fithub.API.Services
         private readonly FithubDbContext _dbContext;
         private readonly IHashService _hashService;
         private readonly AppSettings _appSettings;
+        private readonly IModelMapper _mapper;
 
-        public JwtAuthService(IHashService hashService, FithubDbContext dbContext, IOptions<AppSettings> options)
+        public JwtAuthService(IHashService hashService, FithubDbContext dbContext, IOptions<AppSettings> options, IModelMapper mapper)
         {
             _hashService = hashService;
             _dbContext = dbContext;
             _appSettings = options.Value;
+            _mapper = mapper;
         }
 
         public AuthData Authenticate(AuthData authData)
@@ -46,10 +48,18 @@ namespace Fithub.API.Services
                 return null;
 
             var jwt = GenerateJwtToken(user);
-            return new AuthData() { Authentication = jwt };
+            var apiUser = _mapper.MapBack(user);
+            apiUser.Token = jwt;
+
+            return new AuthData() { Authentication = apiUser };
         }
 
         public AuthData Authorize(AuthData authData)
+        {
+            return AuthorizeAsync(authData).Result;
+        }
+
+        public async Task<AuthData> AuthorizeAsync(AuthData authData)
         {
             try
             {
@@ -70,17 +80,15 @@ namespace Fithub.API.Services
                 var jwtToken = validatedToken as JwtSecurityToken;
                 var userId = int.Parse(jwtToken.Claims.First(x => x.Type == "id").Value);
 
+                if (!await _dbContext.Users.AnyAsync(x => x.Id == userId))
+                    return null;
+
                 return new AuthData() { Authorization = userId };
             }
             catch (Exception)
             {
                 return null;
             }
-        }
-
-        public Task<AuthData> AuthorizeAsync(AuthData authData)
-        {
-            return Task.FromResult(Authorize(authData));
         }
 
         private string GenerateJwtToken(Database.Models.User user)

@@ -19,42 +19,37 @@ namespace Fithub.API.Services
             _mapper = mapper;
         }
 
-        public bool AddCategory(int userId, Category category)
+        public Category AddCategory(Category category)
         {
-            return AddCategoryAsync(userId, category).Result;
+            return AddCategoryAsync(category).Result;
         }
 
-        public async Task<bool> AddCategoryAsync(int userId, Category category)
+        public async Task<Category> AddCategoryAsync(Category category)
         {
-            var user = await _dbContext.Users
-                .FirstOrDefaultAsync(x => x.Id == userId);
-
-            if (user == null)
-                return false;
-
-            user.Categories.Add(_mapper.Map(category));
+            var dbCategory = _mapper.Map(category);
+            var added = await _dbContext.Categories.AddAsync(dbCategory);
             await _dbContext.SaveChangesAsync();
 
-            return true;
+            return _mapper.MapBack(added.Entity);
         }
 
-        public bool DeleteCategory(int userId, Category category)
+        public Category DeleteCategory(Category category)
         {
-            return DeleteCategoryAsync(userId, category).Result;
+            return DeleteCategoryAsync(category).Result;
         }
 
-        public async Task<bool> DeleteCategoryAsync(int userId, Category category)
+        public async Task<Category> DeleteCategoryAsync(Category category)
         {
             var dbCategory = await _dbContext.Categories
-                .FirstOrDefaultAsync(x => x.UserId == userId && category.Id == x.Id);
+                .FirstOrDefaultAsync(x => x.UserId == category.UserId && category.Id == x.Id);
 
             if (dbCategory == null)
-                return false;
+                return null;
 
             _dbContext.Categories.Remove(dbCategory);
             await _dbContext.SaveChangesAsync();
 
-            return true;
+            return _mapper.MapBack(dbCategory);
         }
 
         public ICollection<Category> GetCategories(int userId)
@@ -70,24 +65,24 @@ namespace Fithub.API.Services
                 .ToListAsync();
         }
 
-        public bool UpdateCategory(int userId, Category category)
+        public Category UpdateCategory(Category category)
         {
-            return UpdateCategoryAsync(userId, category).Result;
+            return UpdateCategoryAsync(category).Result;
         }
 
-        public async Task<bool> UpdateCategoryAsync(int userId, Category category)
+        public async Task<Category> UpdateCategoryAsync(Category category)
         {
             var dbCategory = await _dbContext.Categories
-                .FirstOrDefaultAsync(x => x.UserId == userId && category.Id == x.Id);
+                .FirstOrDefaultAsync(x => x.UserId == category.UserId && category.Id == x.Id);
 
             if (dbCategory == null)
-                return false;
+                return null;
 
             var updated = _mapper.Map(category, dbCategory);
             _dbContext.Categories.Update(updated);
             await _dbContext.SaveChangesAsync();
 
-            return true;
+            return _mapper.MapBack(updated);
         }
     }
 }

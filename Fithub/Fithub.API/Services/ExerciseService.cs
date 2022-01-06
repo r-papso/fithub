@@ -19,75 +19,76 @@ namespace Fithub.API.Services
             _mapper = mapper;
         }
 
-        public bool AddExercise(int categoryId, Exercise exercise)
+        public Exercise AddExercise(Exercise exercise)
         {
-            return AddExerciseAsync(categoryId, exercise).Result;
+            return AddExerciseAsync(exercise).Result;
         }
 
-        public async Task<bool> AddExerciseAsync(int categoryId, Exercise exercise)
+        public async Task<Exercise> AddExerciseAsync(Exercise exercise)
         {
             var category = await _dbContext.Categories
-                .FirstOrDefaultAsync(x => x.Id == categoryId);
+                .FirstOrDefaultAsync(x => x.Id == exercise.CategoryId);
 
             if (category == null)
-                return false;
+                return null;
 
-            category.Exercises.Add(_mapper.Map(exercise));
+            var dbExercise = _mapper.Map(exercise);
+            category.Exercises.Add(dbExercise);
             await _dbContext.SaveChangesAsync();
 
-            return true;
+            return _mapper.MapBack(dbExercise);
         }
 
-        public bool DeleteExercise(int categoryId, Exercise exercise)
+        public Exercise DeleteExercise(Exercise exercise)
         {
-            return DeleteExerciseAsync(categoryId, exercise).Result;
+            return DeleteExerciseAsync(exercise).Result;
         }
 
-        public async Task<bool> DeleteExerciseAsync(int categoryId, Exercise exercise)
+        public async Task<Exercise> DeleteExerciseAsync(Exercise exercise)
         {
             var dbExercise = await _dbContext.Exercises
-                .FirstOrDefaultAsync(x => x.CategoryId == categoryId && x.Id == exercise.Id);
+                .FirstOrDefaultAsync(x => x.CategoryId == exercise.CategoryId && x.Id == exercise.Id);
 
             if (dbExercise == null)
-                return false;
+                return null;
 
             _dbContext.Exercises.Remove(dbExercise);
             await _dbContext.SaveChangesAsync();
 
-            return true;
+            return _mapper.MapBack(dbExercise);
         }
 
-        public ICollection<Exercise> GetExercises(int categoryId)
+        public ICollection<Exercise> GetExercises(int userId, int categoryId)
         {
-            return GetExercisesAsync(categoryId).Result;
+            return GetExercisesAsync(userId, categoryId).Result;
         }
 
-        public async Task<ICollection<Exercise>> GetExercisesAsync(int categoryId)
+        public async Task<ICollection<Exercise>> GetExercisesAsync(int userId, int categoryId)
         {
             return await _dbContext.Exercises
-                .Where(x => x.CategoryId == categoryId)
+                .Where(x => x.CategoryId == categoryId && x.UserId == userId)
                 .Select(x => _mapper.MapBack(x))
                 .ToListAsync();
         }
 
-        public bool UpdateExercise(int categoryId, Exercise exercise)
+        public Exercise UpdateExercise(Exercise exercise)
         {
-            return UpdateExerciseAsync(categoryId, exercise).Result;
+            return UpdateExerciseAsync(exercise).Result;
         }
 
-        public async Task<bool> UpdateExerciseAsync(int categoryId, Exercise exercise)
+        public async Task<Exercise> UpdateExerciseAsync(Exercise exercise)
         {
             var dbExercise = await _dbContext.Exercises
-                .FirstOrDefaultAsync(x => x.CategoryId == categoryId && x.Id == exercise.Id);
+                .FirstOrDefaultAsync(x => x.CategoryId == exercise.CategoryId && x.Id == exercise.Id);
 
             if (dbExercise == null)
-                return false;
+                return null;
 
             var updated = _mapper.Map(exercise, dbExercise);
             _dbContext.Exercises.Update(updated);
             await _dbContext.SaveChangesAsync();
 
-            return true;
+            return _mapper.MapBack(updated);
         }
     }
 }

@@ -15,5 +15,9 @@ namespace Fithub.API.Models
         public DateTime End { get; set; }
 
         public string Note { get; set; }
+
+        public int CategoryId { get; set; }
+
+        public int UserId { get; set; }
     }
 }

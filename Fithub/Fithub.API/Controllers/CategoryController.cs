@@ -32,27 +32,36 @@ namespace Fithub.API.Controllers
         // POST api/<CategoryController>
         [HttpPost]
         [Authorize]
-        public async Task<ActionResult> Post([FromBody] Category category)
+        public async Task<ActionResult<Category>> Post([FromBody] Category category)
         {
-            var result = await _categoryService.AddCategoryAsync(GetUserId(), category);
+            if (category.UserId != GetUserId())
+                return Unauthorized();
+
+            var result = await _categoryService.AddCategoryAsync(category);
             return GetActionResult(result);
         }
 
         // PUT api/<CategoryController>
         [HttpPut]
         [Authorize]
-        public async Task<ActionResult> Put([FromBody] Category category)
+        public async Task<ActionResult<Category>> Put([FromBody] Category category)
         {
-            var result = await _categoryService.UpdateCategoryAsync(GetUserId(), category);
+            if (category.UserId != GetUserId())
+                return Unauthorized();
+
+            var result = await _categoryService.UpdateCategoryAsync(category);
             return GetActionResult(result);
         }
 
         // DELETE api/<CategoryController>
         [HttpDelete]
         [Authorize]
-        public async Task<ActionResult> Delete([FromBody] Category category)
+        public async Task<ActionResult<Category>> Delete([FromBody] Category category)
         {
-            var result = await _categoryService.DeleteCategoryAsync(GetUserId(), category);
+            if (category.UserId != GetUserId())
+                return Unauthorized();
+
+            var result = await _categoryService.DeleteCategoryAsync(category);
             return GetActionResult(result);
         }
     }

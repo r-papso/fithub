@@ -7,7 +7,13 @@ namespace Fithub.Database.Models.Configurations
     {
         public void Configure(EntityTypeBuilder<Exercise> builder)
         {
-            builder.HasKey(e => new { e.Id, e.CategoryId });
+            builder.HasKey(e => new { e.Id, e.CategoryId, e.UserId });
+
+            builder.HasOne(e => e.Category)
+                .WithMany(c => c.Exercises)
+                .HasForeignKey(e => new { e.CategoryId, e.UserId });
+
+            builder.Property(e => e.Id).ValueGeneratedOnAdd();
             builder.Property(e => e.Start).IsRequired();
         }
     }

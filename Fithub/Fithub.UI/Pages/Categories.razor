@@ -1,0 +1,105 @@
+﻿@using Enums
+
+@page "/categories"
+@attribute [Authorize]
+
+<h3>Categories</h3>
+
+
+<Table>
+    <TableHeader>
+        <TableRow>
+            <TableHeaderCell>Category Name</TableHeaderCell>
+            <TableHeaderCell>Category Type</TableHeaderCell>
+            <TableHeaderCell>Actions</TableHeaderCell>
+        </TableRow>
+    </TableHeader>
+    <TableBody>
+        @foreach (var category in Service.Get())
+        {
+            <TableRow>
+                <TableRowCell>@category.Name</TableRowCell>
+                <TableRowCell>@category.Type</TableRowCell>
+                <TableRowCell>
+                    <div>
+                        <Button Color="Color.Primary" Outline Clicked="@(() => { selectedCategory = new Models.Category(category); updateModal.Show(); })">Edit</Button>
+                        <Button Color="Color.Danger" Outline Clicked="@(() => DeleteCategory(category))">Delete</Button>
+                    </div>
+                </TableRowCell>
+            </TableRow>
+        }
+    </TableBody>
+</Table>
+
+<Button Color="Color.Primary" Clicked="@(() => addModal.Show())">New Category</Button>
+
+<Modal @ref="addModal">
+    <ModalContent>
+        <ModalHeader>
+            <ModalTitle>New category</ModalTitle>
+            <CloseButton />
+        </ModalHeader>
+        <ModalBody>
+            <Field>
+                <FieldLabel>Name</FieldLabel>
+                <TextEdit @bind-Text="@newCategory.Name" />
+            </Field>
+            <Field>
+                <FieldLabel>Category</FieldLabel>
+                <Select @bind-SelectedValue="@newCategory.Type">
+                    @foreach (var value in Enum.GetValues(typeof(CategoryType)))
+                    {
+                        <SelectItem Value="value">@value</SelectItem>
+                    }
+                </Select>
+            </Field>
+        </ModalBody>
+        <ModalFooter>
+            <Button Color="Color.Secondary" Clicked="@(() => addModal.Hide())">Close</Button>
+            <Button Color="Color.Primary" Clicked="@AddCategory">Create</Button>
+        </ModalFooter>
+    </ModalContent>
+</Modal>
+
+<Modal @ref="updateModal">
+    <ModalContent>
+        <ModalHeader>
+            <ModalTitle>Update category</ModalTitle>
+            <CloseButton />
+        </ModalHeader>
+        <ModalBody>
+            <Field>
+                <FieldLabel>Name</FieldLabel>
+                <TextEdit @bind-Text="@selectedCategory.Name" />
+            </Field>
+            <Field>
+                <FieldLabel>Category</FieldLabel>
+                <Select @bind-SelectedValue="@selectedCategory.Type">
+                    @foreach (var value in Enum.GetValues(typeof(CategoryType)))
+                    {
+                        <SelectItem Value="value">@value</SelectItem>
+                    }
+                </Select>
+            </Field>
+        </ModalBody>
+        <ModalFooter>
+            <Button Color="Color.Secondary" Clicked="@(() => updateModal.Hide())">Close</Button>
+            <Button Color="Color.Primary" Clicked="@UpdateCategory">Update</Button>
+        </ModalFooter>
+    </ModalContent>
+</Modal>
+
+
+<Snackbar @ref="successSnackbar" Color="SnackbarColor.Success">
+    <SnackbarBody>
+        @successMessage
+        <SnackbarAction Clicked="@(()=>successSnackbar.Hide())">HIDE</SnackbarAction>
+    </SnackbarBody>
+</Snackbar>
+
+<Snackbar @ref="errorSnackbar" Color="SnackbarColor.Danger">
+    <SnackbarBody>
+        @errorMessage
+        <SnackbarAction Clicked="@(()=>errorSnackbar.Hide())">HIDE</SnackbarAction>
+    </SnackbarBody>
+</Snackbar>

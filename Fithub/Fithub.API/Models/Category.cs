@@ -9,5 +9,7 @@ namespace Fithub.API.Models
         public string Name { get; set; }
 
         public CategoryType Type { get; set; }
+
+        public int UserId { get; set; }
     }
 }

@@ -10,15 +10,36 @@ namespace Fithub.API.Controllers
     public class AuthController : ControllerBase
     {
         private readonly IAuthService _authService;
+        private readonly IUserService _userService;
 
-        public AuthController(IAuthService authService)
+        public AuthController(IAuthService authService, IUserService userService)
         {
             _authService = authService;
+            _userService = userService;
         }
 
         [HttpPost]
-        public async Task<IActionResult> Authenticate([FromBody] Credentials credentials)
+        public async Task<ActionResult<User>> Authenticate([FromBody] Credentials credentials)
         {
+            var authInput = new AuthData() { Authentication = credentials };
+            var authOutput = await _authService.AuthenticateAsync(authInput);
+
+            if (authOutput.Authentication == null)
+                return Unauthorized();
+
+            return Ok(authOutput.Authentication as User);
+        }
+
+        [HttpPost]
+        [Route("register")]
+        public async Task<ActionResult<User>> Register([FromBody] Credentials credentials)
+        {
+            var user = new User() { Username = credentials.Username, Password = credentials.Password };
+            var result = await _userService.AddUserAsync(user);
+
+            if (!result)
+                return BadRequest();
+
             var authInput = new AuthData() { Authentication = credentials };
             var authOutput = await _authService.AuthenticateAsync(authInput);
 

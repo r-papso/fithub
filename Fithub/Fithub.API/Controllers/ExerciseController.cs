@@ -1,5 +1,9 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Fithub.API.Helpers;
+using Fithub.API.Interfaces;
+using Fithub.API.Models;
+using Microsoft.AspNetCore.Mvc;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
@@ -9,36 +13,56 @@ namespace Fithub.API.Controllers
     [ApiController]
     public class ExerciseController : BaseController
     {
-        // GET: api/<ExerciseController>
-        [HttpGet]
-        public IEnumerable<string> Get()
+        private readonly IExerciseService _exerciseService;
+
+        public ExerciseController(IExerciseService exerciseService)
         {
-            return new string[] { "value1", "value2" };
+            _exerciseService = exerciseService;
         }
 
         // GET api/<ExerciseController>/5
-        [HttpGet("{id}")]
-        public string Get(int id)
+        [HttpGet("{categoryId}")]
+        [Authorize]
+        public async Task<ActionResult<IEnumerable<Exercise>>> Get(int categoryId)
         {
-            return "value";
+            var result = await _exerciseService.GetExercisesAsync(GetUserId(), categoryId);
+            return Ok(result);
         }
 
         // POST api/<ExerciseController>
         [HttpPost]
-        public void Post([FromBody] string value)
+        [Authorize]
+        public async Task<ActionResult<Exercise>> Post([FromBody] Exercise exercise)
         {
+            if (exercise.UserId != GetUserId())
+                return Unauthorized();
+
+            var result = await _exerciseService.AddExerciseAsync(exercise);
+            return GetActionResult(result);
         }
 
         // PUT api/<ExerciseController>/5
-        [HttpPut("{id}")]
-        public void Put(int id, [FromBody] string value)
+        [HttpPut]
+        [Authorize]
+        public async Task<ActionResult<Exercise>> Put([FromBody] Exercise exercise)
         {
+            if (exercise.UserId != GetUserId())
+                return Unauthorized();
+
+            var result = await _exerciseService.UpdateExerciseAsync(exercise);
+            return GetActionResult(result);
         }
 
         // DELETE api/<ExerciseController>/5
-        [HttpDelete("{id}")]
-        public void Delete(int id)
+        [HttpDelete]
+        [Authorize]
+        public async Task<ActionResult<Exercise>> Delete([FromBody] Exercise exercise)
         {
+            if (exercise.UserId != GetUserId())
+                return Unauthorized();
+
+            var result = await _exerciseService.DeleteExerciseAsync(exercise);
+            return GetActionResult(result);
         }
     }
 }

@@ -10,16 +10,16 @@ namespace Fithub.API.Interfaces
 
         public Task<ICollection<Category>> GetCategoriesAsync(int userId);
 
-        public bool AddCategory(int userId, Category category);
+        public Category AddCategory(Category category);
 
-        public Task<bool> AddCategoryAsync(int userId, Category category);
+        public Task<Category> AddCategoryAsync(Category category);
 
-        public bool UpdateCategory(int userId, Category category);
+        public Category UpdateCategory(Category category);
 
-        public Task<bool> UpdateCategoryAsync(int userId, Category category);
+        public Task<Category> UpdateCategoryAsync(Category category);
 
-        public bool DeleteCategory(int userId, Category category);
+        public Category DeleteCategory(Category category);
 
-        public Task<bool> DeleteCategoryAsync(int userId, Category category);
+        public Task<Category> DeleteCategoryAsync(Category category);
     }
 }

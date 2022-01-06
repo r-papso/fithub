@@ -56,6 +56,8 @@ namespace Fithub.API.Services
                 return false;
 
             var updated = _mapper.Map(user, dbUser);
+            dbUser.Password = _hashService.CryptPassword(user.Password, dbUser.Salt);
+
             _dbContext.Users.Update(updated);
             await _dbContext.SaveChangesAsync();
 

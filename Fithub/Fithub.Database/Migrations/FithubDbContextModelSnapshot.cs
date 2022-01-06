@@ -26,6 +26,9 @@ namespace Fithub.Database.Migrations
                         .HasColumnType("int")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
+                    b.Property<int>("UserId")
+                        .HasColumnType("int");
+
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasMaxLength(50)
@@ -34,10 +37,7 @@ namespace Fithub.Database.Migrations
                     b.Property<int>("Type")
                         .HasColumnType("int");
 
-                    b.Property<int?>("UserId")
-                        .HasColumnType("int");
-
-                    b.HasKey("Id");
+                    b.HasKey("Id", "UserId");
 
                     b.HasIndex("UserId");
 
@@ -47,9 +47,14 @@ namespace Fithub.Database.Migrations
             modelBuilder.Entity("Fithub.Database.Models.Exercise", b =>
                 {
                     b.Property<int>("Id")
-                        .HasColumnType("int");
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
                     b.Property<int>("CategoryId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("UserId")
                         .HasColumnType("int");
 
                     b.Property<DateTime>("End")
@@ -67,9 +72,9 @@ namespace Fithub.Database.Migrations
                     b.Property<float>("Weight")
                         .HasColumnType("real");
 
-                    b.HasKey("Id", "CategoryId");
+                    b.HasKey("Id", "CategoryId", "UserId");
 
-                    b.HasIndex("CategoryId");
+                    b.HasIndex("CategoryId", "UserId");
 
                     b.ToTable("Exercises");
                 });
@@ -104,16 +109,20 @@ namespace Fithub.Database.Migrations
 
             modelBuilder.Entity("Fithub.Database.Models.Category", b =>
                 {
-                    b.HasOne("Fithub.Database.Models.User", null)
+                    b.HasOne("Fithub.Database.Models.User", "User")
                         .WithMany("Categories")
-                        .HasForeignKey("UserId");
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("User");
                 });
 
             modelBuilder.Entity("Fithub.Database.Models.Exercise", b =>
                 {
                     b.HasOne("Fithub.Database.Models.Category", "Category")
                         .WithMany("Exercises")
-                        .HasForeignKey("CategoryId")
+                        .HasForeignKey("CategoryId", "UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 

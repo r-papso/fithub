@@ -28,27 +28,29 @@ namespace Fithub.Database.Migrations
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
+                    UserId = table.Column<int>(type: "int", nullable: false),
                     Name = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false),
-                    Type = table.Column<int>(type: "int", nullable: false),
-                    UserId = table.Column<int>(type: "int", nullable: true)
+                    Type = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Categories", x => x.Id);
+                    table.PrimaryKey("PK_Categories", x => new { x.Id, x.UserId });
                     table.ForeignKey(
                         name: "FK_Categories_Users_UserId",
                         column: x => x.UserId,
                         principalTable: "Users",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
                 name: "Exercises",
                 columns: table => new
                 {
-                    Id = table.Column<int>(type: "int", nullable: false),
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
                     CategoryId = table.Column<int>(type: "int", nullable: false),
+                    UserId = table.Column<int>(type: "int", nullable: false),
                     Reps = table.Column<int>(type: "int", nullable: false),
                     Weight = table.Column<float>(type: "real", nullable: false),
                     Start = table.Column<DateTime>(type: "datetime2", nullable: false),
@@ -57,12 +59,12 @@ namespace Fithub.Database.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Exercises", x => new { x.Id, x.CategoryId });
+                    table.PrimaryKey("PK_Exercises", x => new { x.Id, x.CategoryId, x.UserId });
                     table.ForeignKey(
-                        name: "FK_Exercises_Categories_CategoryId",
-                        column: x => x.CategoryId,
+                        name: "FK_Exercises_Categories_CategoryId_UserId",
+                        columns: x => new { x.CategoryId, x.UserId },
                         principalTable: "Categories",
-                        principalColumn: "Id",
+                        principalColumns: new[] { "Id", "UserId" },
                         onDelete: ReferentialAction.Cascade);
                 });
 
@@ -72,9 +74,9 @@ namespace Fithub.Database.Migrations
                 column: "UserId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Exercises_CategoryId",
+                name: "IX_Exercises_CategoryId_UserId",
                 table: "Exercises",
-                column: "CategoryId");
+                columns: new[] { "CategoryId", "UserId" });
 
             migrationBuilder.CreateIndex(
                 name: "IX_Users_Username",
