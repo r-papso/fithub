@@ -5,11 +5,13 @@ using Fithub.UI.Models;
 using Fithub.UI.Services;
 using Microsoft.AspNetCore.Components;
 using System;
+using System.Threading.Tasks;
 
 namespace Fithub.UI.Pages
 {
     public partial class Exercises : IDisposable
     {
+
         #region Models
 
         private Exercise selectedExercise = new();
@@ -46,12 +48,12 @@ namespace Fithub.UI.Pages
         [Inject]
         protected IStateContainer Container { get; set; }
 
-        protected override void OnInitialized()
+        protected override async Task OnInitializedAsync()
         {
-            base.OnInitialized();
+            await base.OnInitializedAsync();
 
             Service.EntitiesChanged += OnEntitiesChanged;
-            _ = Service.Request(CategoryId);
+            await Service.Request(CategoryId);
         }
 
         private void OnEntitiesChanged(object sender, EventArgs e)

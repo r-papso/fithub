@@ -59,7 +59,7 @@ namespace Fithub.UI.Services
 
         protected abstract bool Compare(T left, T right);
 
-        protected void OnEntitiesChanged()
+        protected virtual void OnEntitiesChanged()
         {
             EntitiesChanged?.Invoke(this, EventArgs.Empty);
         }

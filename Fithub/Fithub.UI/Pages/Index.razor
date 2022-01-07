@@ -1,8 +1,27 @@
 ﻿@page "/"
 @attribute [Authorize]
 
-<h1>Hello, world!</h1>
+<Heading Size="HeadingSize.Is3">Welcome to the Fithub app!</Heading>
 
-Welcome to your new app.
-
-<SurveyPrompt Title="How is Blazor working for you?" />
+<Row>
+    <Column ColumnSize="ColumnSize.IsHalf.OnWidescreen">
+        <Card Margin="Margin.Is4.OnY">
+            <CardHeader>
+                <CardTitle>Exercise statistics by day</CardTitle>
+            </CardHeader>
+            <CardBody>
+                <LineChart @ref="dayChart" TItem="int" Options="@dayChartOptions" />
+            </CardBody>
+        </Card>
+    </Column>
+    <Column ColumnSize="ColumnSize.IsHalf.OnWidescreen">
+        <Card Margin="Margin.Is4.OnY">
+            <CardHeader>
+                <CardTitle>Exercise statistics by type</CardTitle>
+            </CardHeader>
+            <CardBody>
+                <Chart @ref="typeChart" Type="ChartType.Doughnut" TItem="int" Options="@typeChartOptions" />
+            </CardBody>
+        </Card>
+    </Column>
+</Row>

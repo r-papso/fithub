@@ -9,8 +9,12 @@ namespace Fithub.UI.Services
 {
     public class ExerciseService : EntityService<Exercise>
     {
+        private ICollection<ExerciseDateGroup> _grouped;
+
         public ExerciseService(IHttpService httpService) : base(httpService)
-        { }
+        {
+            _grouped = new List<ExerciseDateGroup>();
+        }
 
         public override string Endpoint => Endpoints.Exercise;
 
@@ -20,20 +24,25 @@ namespace Fithub.UI.Services
             var exercises = await HttpService.Get<IEnumerable<Exercise>>($"{Endpoint}/{categoryId}");
 
             Entities.Clear();
-            foreach (var exercise in exercises)
-            {
-                Entities.Add(exercise);
-            }
+            Entities.AddRange(exercises);
 
             OnEntitiesChanged();
         }
 
-        public IEnumerable<ExerciseDateGroup> GetExercisesGroupedByDate()
+        public ICollection<ExerciseDateGroup> GetExercisesGroupedByDate()
         {
-            return Entities
+            return _grouped;
+        }
+
+        protected override void OnEntitiesChanged()
+        {
+            _grouped = Entities
                 .GroupBy(x => x.Start.Value.Date)
-                .Select(g => new ExerciseDateGroup() { Date = g.Key, Exercises = g })
-                .OrderByDescending(x => x.Date);
+                .Select(g => new ExerciseDateGroup() { Date = g.Key, Exercises = g.ToList() })
+                .OrderByDescending(x => x.Date)
+                .ToList();
+
+            base.OnEntitiesChanged();
         }
 
         protected override bool Compare(Exercise left, Exercise right)

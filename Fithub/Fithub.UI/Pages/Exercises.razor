@@ -1,47 +1,51 @@
-﻿@page "/exercises/{CategoryId:int}"
+﻿@using Helpers
+
+@page "/exercises/{CategoryId:int}"
 @attribute [Authorize]
 
 <h3>Exercises</h3>
 
-<Accordion>
+<Accordion Margin="Margin.Is4.OnY">
     @foreach (var exerciseGroup in Service.GetExercisesGroupedByDate())
     {
-        <Collapse Visible="exerciseGroup.Visible">
+        <Collapse Visible="@exerciseGroup.Visible">
             <CollapseHeader>
                 <Heading Size="HeadingSize.Is5">
-                    <Button Clicked="@(() => exerciseGroup.Visible = !exerciseGroup.Visible)">@exerciseGroup.Date</Button>
+                    <Button Clicked="@(() => exerciseGroup.Visible = !exerciseGroup.Visible)">@exerciseGroup.Date.ToString("d MMMM yyyy")</Button>
                 </Heading>
             </CollapseHeader>
-            <CollapseBody>
-                <Table>
-                    <TableHeader ThemeContrast="ThemeContrast.Light">
-                        <TableRow>
-                            <TableHeaderCell>Weight</TableHeaderCell>
-                            <TableHeaderCell>Reps</TableHeaderCell>
-                            <TableHeaderCell>Time</TableHeaderCell>
-                            <TableHeaderCell>Note</TableHeaderCell>
-                            <TableHeaderCell>Actions</TableHeaderCell>
-                        </TableRow>
-                    </TableHeader>
-                    <TableBody>
-                        @foreach (var exercise in exerciseGroup.Exercises)
-                        {
+            <div>
+                <CollapseBody>
+                    <Table>
+                        <TableHeader ThemeContrast="ThemeContrast.Light">
                             <TableRow>
-                                <TableRowCell>@exercise.Weight</TableRowCell>
-                                <TableRowCell>@exercise.Reps</TableRowCell>
-                                <TableRowCell>@exercise.Start</TableRowCell>
-                                <TableRowCell>@exercise.Note</TableRowCell>
-                                <TableRowCell>
-                                    <div>
-                                        <Button Color="Color.Primary" Outline Clicked="@(() => { selectedExercise = new Models.Exercise(exercise); updateModal.Show(); })">Edit</Button>
-                                        <Button Color="Color.Danger" Outline Clicked="@(() => DeleteExercise(exercise))">Delete</Button>
-                                    </div>
-                                </TableRowCell>
+                                <TableHeaderCell>Weight</TableHeaderCell>
+                                <TableHeaderCell>Reps</TableHeaderCell>
+                                <TableHeaderCell>Time</TableHeaderCell>
+                                <TableHeaderCell>Note</TableHeaderCell>
+                                <TableHeaderCell>Actions</TableHeaderCell>
                             </TableRow>
-                        }
-                    </TableBody>
-                </Table>
-            </CollapseBody>
+                        </TableHeader>
+                        <TableBody>
+                            @foreach (var exercise in exerciseGroup.Exercises)
+                            {
+                                <TableRow>
+                                    <TableRowCell>@exercise.Weight</TableRowCell>
+                                    <TableRowCell>@exercise.Reps</TableRowCell>
+                                    <TableRowCell>@exercise.Start</TableRowCell>
+                                    <TableRowCell>@exercise.Note</TableRowCell>
+                                    <TableRowCell>
+                                        <div>
+                                            <Button Color="Color.Primary" Outline Clicked="@(() => { selectedExercise = new Models.Exercise(exercise); updateModal.Show(); })">Edit</Button>
+                                            <Button Color="Color.Danger" Outline Clicked="@(() => DeleteExercise(exercise))">Delete</Button>
+                                        </div>
+                                    </TableRowCell>
+                                </TableRow>
+                            }
+                        </TableBody>
+                    </Table>
+                </CollapseBody>
+            </div>
         </Collapse>
     }
 </Accordion>

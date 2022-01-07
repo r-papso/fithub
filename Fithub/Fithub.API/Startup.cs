@@ -45,6 +45,7 @@ namespace Fithub.API
             services.AddScoped<IHashService, HashService>();
             services.AddScoped<IModelMapper, ModelMapper>();
             services.AddScoped<IUserService, UserService>();
+            services.AddScoped<IStatsService, StatsService>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

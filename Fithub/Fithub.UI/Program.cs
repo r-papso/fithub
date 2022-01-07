@@ -29,6 +29,7 @@ namespace Fithub.UI
             builder.Services.AddScoped<ILocalStorage, LocalStorage>();
             builder.Services.AddScoped<CategoryService>();
             builder.Services.AddScoped<ExerciseService>();
+            builder.Services.AddScoped<IStatsService, StatsService>();
 
             builder.Services.AddSingleton<IStateContainer, StateContainer>();
 

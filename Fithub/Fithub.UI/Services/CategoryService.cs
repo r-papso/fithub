@@ -18,10 +18,7 @@ namespace Fithub.UI.Services
             var categories = await HttpService.Get<IEnumerable<Category>>(Endpoint);
 
             Entities.Clear();
-            foreach (var category in categories)
-            {
-                Entities.Add(category);
-            }
+            Entities.AddRange(categories);
 
             OnEntitiesChanged();
         }

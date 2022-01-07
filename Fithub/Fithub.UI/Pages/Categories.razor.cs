@@ -5,6 +5,7 @@ using Fithub.UI.Models;
 using Fithub.UI.Services;
 using Microsoft.AspNetCore.Components;
 using System;
+using System.Threading.Tasks;
 
 namespace Fithub.UI.Pages
 {
@@ -50,12 +51,12 @@ namespace Fithub.UI.Pages
 
         #endregion
 
-        protected override void OnInitialized()
+        protected override async Task OnInitializedAsync()
         {
-            base.OnInitialized();
+            await base.OnInitializedAsync();
 
             Service.EntitiesChanged += OnEntitiesChanged;
-            _ = Service.Request(null);
+            await Service.Request(null);
         }
 
         private async void AddCategory()
