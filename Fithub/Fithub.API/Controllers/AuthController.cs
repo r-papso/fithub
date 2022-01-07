@@ -43,7 +43,7 @@ namespace Fithub.API.Controllers
             var authInput = new AuthData() { Authentication = credentials };
             var authOutput = await _authService.Authenticate(authInput);
 
-            if (authOutput.Authentication == null)
+            if (authOutput == null)
                 return Unauthorized();
 
             return Ok(authOutput.Authentication);
