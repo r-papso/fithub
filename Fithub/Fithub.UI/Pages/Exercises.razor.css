@@ -1,3 +1,21 @@
 ﻿::deep .card-body {
     padding: 0rem !important;
 }
+
+::deep .table {
+    width: 100% !important;
+    table-layout: fixed !important;
+    margin: 0rem !important;
+}
+
+::deep .td-small-width {
+    width: 10% !important;
+}
+
+::deep .td-medium-width {
+    width: 20% !important;
+}
+
+::deep .td-large-width {
+    width: 40% !important;
+}

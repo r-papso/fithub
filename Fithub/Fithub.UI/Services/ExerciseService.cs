@@ -36,11 +36,43 @@ namespace Fithub.UI.Services
 
         protected override void OnEntitiesChanged()
         {
-            _grouped = Entities
-                .GroupBy(x => x.Start.Value.Date)
-                .Select(g => new ExerciseDateGroup() { Date = g.Key, Exercises = g.ToList() })
-                .OrderByDescending(x => x.Date)
+            var newGrouped = Entities
+                .GroupBy(e => e.Start.Value.Date)
+                .Select(g => new ExerciseDateGroup()
+                {
+                    Date = g.Key,
+                    Exercises = g.OrderByDescending(e => e.Start).ToList(),
+                    CategoryId = g.FirstOrDefault()?.CategoryId ?? 0
+                })
+                .OrderByDescending(g => g.Date)
                 .ToList();
+
+            if (_grouped.Count > 0 && newGrouped.Count > 0 && _grouped.First().CategoryId == newGrouped.First().CategoryId)
+            {
+                var join = newGrouped
+                    .GroupJoin(
+                        _grouped,
+                        left => left.Date,
+                        right => right.Date,
+                        (left, right) => new { left, right = right.DefaultIfEmpty() })
+                    .SelectMany(join => join.right.Select(right => new { join.left, right }))
+                    .Select(
+                        join => new ExerciseDateGroup()
+                        {
+                            Date = join.left.Date,
+                            Exercises = join.left.Exercises.OrderByDescending(e => e.Start).ToList(),
+                            CategoryId = join.left.CategoryId,
+                            Visible = join.right?.Visible ?? false
+                        })
+                    .OrderByDescending(g => g.Date)
+                    .ToList();
+
+                _grouped = join;
+            }
+            else
+            {
+                _grouped = newGrouped;
+            }
 
             base.OnEntitiesChanged();
         }

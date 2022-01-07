@@ -11,6 +11,8 @@ namespace Fithub.UI.Models
 
         public bool Visible { get; set; }
 
+        public int CategoryId { get; set; }
+
         public ExerciseDateGroup()
         { }
 

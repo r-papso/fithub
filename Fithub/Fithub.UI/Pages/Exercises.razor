@@ -19,22 +19,22 @@
                     <Table>
                         <TableHeader ThemeContrast="ThemeContrast.Light">
                             <TableRow>
-                                <TableHeaderCell>Weight</TableHeaderCell>
-                                <TableHeaderCell>Reps</TableHeaderCell>
-                                <TableHeaderCell>Time</TableHeaderCell>
-                                <TableHeaderCell>Note</TableHeaderCell>
-                                <TableHeaderCell>Actions</TableHeaderCell>
+                                <TableHeaderCell Class="td-small-width">Weight</TableHeaderCell>
+                                <TableHeaderCell Class="td-small-width">Reps</TableHeaderCell>
+                                <TableHeaderCell Class="td-medium-width">Time</TableHeaderCell>
+                                <TableHeaderCell Class="td-large-width">Note</TableHeaderCell>
+                                <TableHeaderCell Class="td-medium-width">Actions</TableHeaderCell>
                             </TableRow>
                         </TableHeader>
                         <TableBody>
                             @foreach (var exercise in exerciseGroup.Exercises)
                             {
                                 <TableRow>
-                                    <TableRowCell>@exercise.Weight</TableRowCell>
-                                    <TableRowCell>@exercise.Reps</TableRowCell>
-                                    <TableRowCell>@exercise.Start</TableRowCell>
-                                    <TableRowCell>@exercise.Note</TableRowCell>
-                                    <TableRowCell>
+                                    <TableRowCell Class="td-small-width">@exercise.Weight</TableRowCell>
+                                    <TableRowCell Class="td-small-width">@exercise.Reps</TableRowCell>
+                                    <TableRowCell Class="td-medium-width">@exercise.Start</TableRowCell>
+                                    <TableRowCell Class="td-large-width">@exercise.Note</TableRowCell>
+                                    <TableRowCell Class="td-medium-width">
                                         <div>
                                             <Button Color="Color.Primary" Outline Clicked="@(() => { selectedExercise = new Models.Exercise(exercise); updateModal.Show(); })">Edit</Button>
                                             <Button Color="Color.Danger" Outline Clicked="@(() => DeleteExercise(exercise))">Delete</Button>
@@ -50,7 +50,7 @@
     }
 </Accordion>
 
-<Button Color="Color.Primary" Clicked="@(() => addModal.Show())">New Exercise</Button>
+<Button Color="Color.Primary" Clicked="@(() => { newExercise.Start = DateTime.Now; newExercise.End = DateTime.Now; addModal.Show(); })">New Exercise</Button>
 
 <Modal @ref="addModal">
     <ModalContent>

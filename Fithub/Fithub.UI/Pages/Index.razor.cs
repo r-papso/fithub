@@ -14,7 +14,23 @@ namespace Fithub.UI.Pages
         private LineChart<int> dayChart;
         private Chart<int> typeChart;
 
-        private LineChartOptions dayChartOptions = new() { AspectRatio = 1.5 };
+        private LineChartOptions dayChartOptions = new()
+        {
+            AspectRatio = 1.5,
+            Scales = new()
+            {
+                YAxes = new List<Axis>()
+                {
+                    new()
+                    {
+                        Ticks = new AxisTicks()
+                        {
+                            BeginAtZero = true,
+                        }
+                    }
+                }
+            }
+        };
         private ChartOptions typeChartOptions = new() { AspectRatio = 1.5 };
 
         private List<string> backgroundColors = new()
@@ -73,8 +89,8 @@ namespace Fithub.UI.Pages
             {
                 Label = "# of Exercises",
                 Data = Service.StatsByDay().Select(x => x.Count).ToList(),
-                BackgroundColor = backgroundColors,
-                BorderColor = borderColors,
+                BackgroundColor = backgroundColors[0],
+                BorderColor = borderColors[0],
                 Fill = true,
                 PointRadius = 2,
                 BorderDash = new List<int>()
@@ -90,6 +106,7 @@ namespace Fithub.UI.Pages
         {
             return new DoughnutChartDataset<int>()
             {
+                Label = "# of Exercises",
                 Data = Service.StatsByType().Select(x => x.Count).ToList(),
                 BackgroundColor = backgroundColors,
                 BorderColor = borderColors,
